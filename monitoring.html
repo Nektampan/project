@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SleepWell - Monitoring Kualitas Tidur</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./css/monitoring.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <i class="fas fa-moon"></i>
+                SleepWell
+            </a>
+            <ul class="nav-links">
+                <li><a href="home.html">Beranda</a></li>
+                <li><a href="monitoring.html"class="active">Monitoring</a></li>
+                <li><a href="tips.html">Tips</a></li>
+                <li><a href="tentang.html">Tentang</a></li>
+            </ul>
+            <div class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-moon"></i> SleepWell Dashboard</h1>
+            <p class="subtitle">Sistem monitoring kualitas tidur berbasis IoT dengan analitik canggih dan pelaporan real-time untuk kesehatan tidur yang optimal</p>
+            <div class="status-indicator">
+                <div class="pulse"></div>
+                Sistem Aktif - Monitoring Berlangsung
+            </div>
+        </div>
+
+        <div class="dashboard-stats" id="monitoring">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-bed"></i></div>
+                <div class="stat-title">Kualitas Tidur</div>
+                <div class="stat-value" id="currentQuality">--</div>
+                <div class="stat-unit">Persentase</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-lightbulb"></i></div>
+                <div class="stat-title">Tingkat Cahaya</div>
+                <div class="stat-value" id="currentLight">--</div>
+                <div class="stat-unit">Lux</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-volume-up"></i></div>
+                <div class="stat-title">Tingkat Suara</div>
+                <div class="stat-value" id="currentSound">--</div>
+                <div class="stat-unit">Desibel (dB)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-thermometer-half"></i></div>
+                <div class="stat-title">Suhu Ruangan</div>
+                <div class="stat-value" id="currentTemp">--</div>
+                <div class="stat-unit">°C</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-running"></i></div>
+                <div class="stat-title">Aktivitas Gerak</div>
+                <div class="stat-value" id="currentMovement">--</div>
+                <div class="stat-unit">Kejadian</div>
+            </div>
+        </div>
+
+        <div class="charts-container">
+            <div class="chart-container">
+                <div class="chart-header">
+                    <div class="chart-title">Tren Kualitas Tidur (24 Jam Terakhir)</div>
+                    <div class="chart-actions">
+                        <div class="chart-btn" title="Unduh sebagai PNG" onclick="downloadChart('qualityChart')">
+                            <i class="fas fa-download"></i>
+                        </div>
+                        <div class="chart-btn" title="Perbesar layar" onclick="toggleFullscreen('qualityChart')">
+                            <i class="fas fa-expand"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-canvas-container">
+                    <canvas id="qualityChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-container">
+                <div class="chart-header">
+                    <div class="chart-title">Kondisi Lingkungan Tidur</div>
+                    <div class="chart-actions">
+                        <div class="chart-btn" title="Unduh sebagai PNG" onclick="downloadChart('environmentChart')">
+                            <i class="fas fa-download"></i>
+                        </div>
+                        <div class="chart-btn" title="Perbesar layar" onclick="toggleFullscreen('environmentChart')">
+                            <i class="fas fa-expand"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-canvas-container">
+                    <canvas id="environmentChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="data-section" id="tentang">
+            <div class="section-header">
+                <div class="section-title">Data Rekaman Tidur</div>
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="loadData()">
+                        <i class="fas fa-sync-alt"></i> Refresh Data
+                    </button>
+                    <button class="btn btn-primary" onclick="exportToExcel()">
+                        <i class="fas fa-file-excel"></i> Export ke Excel
+                    </button>
+                </div>
+            </div>
+            
+            <div style="position: relative; min-height: 350px;">
+                <div class="loading-overlay" id="loadingOverlay">
+                    <div class="spinner"></div>
+                    <div class="loading-text">Memuat data tidur...</div>
+                </div>
+                
+                <table class="data-table" id="dataTable">
+                    <thead>
+                        <tr>
+                            <th>Waktu Pencatatan</th>
+                            <th>Kualitas</th>
+                            <th>Kategori</th>
+                            <th>Cahaya (lux)</th>
+                            <th>Suara (dB)</th>
+                            <th>Suhu (°C)</th>
+                            <th>Gerakan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Contact Section -->
+        <div class="data-section" id="contact">
+            <div class="section-header">
+                <div class="section-title">Hubungi Kami</div>
+            </div>
+            <div style="text-align: center; padding: 30px 0;">
+                <p style="font-size: 1.2rem; color: var(--text-muted); margin-bottom: 30px;">
+                    Butuh bantuan atau memiliki pertanyaan tentang sistem monitoring tidur SleepWell?
+                </p>
+                <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">
+                    <div style="display: flex; align-items: center; gap: 10px; color: var(--text-light);">
+                        <i class="fas fa-envelope" style="font-size: 1.5rem; color: #667eea;"></i>
+                        <span>support@sleepwell.com</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px; color: var(--text-light);">
+                        <i class="fas fa-phone" style="font-size: 1.5rem; color: #667eea;"></i>
+                        <span>+62 21 1234 5678</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px; color: var(--text-light);">
+                        <i class="fas fa-map-marker-alt" style="font-size: 1.5rem; color: #667eea;"></i>
+                        <span>Jakarta, Indonesia</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText">Operasi berhasil dilakukan</span>
+    </div>
+       <script src="./Js/monitoring.js"></script>
+</body>
+</html>
