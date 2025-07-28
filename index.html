@@ -3,392 +3,605 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SleepWell - Monitor Kualitas Tidur Anda</title>
-      <style>
-      
+    <title>Sleep Monitor - Sign In/Sign Up</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-       body {
+        body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
             color: #ffffff;
             min-height: 100vh;
             overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .header {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-
-        .nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #64ffda;
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
         }
 
-
-       .logo::before {
-            content: "🌙";
-            font-size: 2rem;
-        }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-        }
-
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            padding: 0.5rem 1rem;
-            border-radius: 25px;
-        }
-
-        .nav-links a:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .hero {
-            padding: 6rem 0;
-            text-align: center;
-            color: white;
-        }
-
-        .hero h1 {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            animation: fadeInUp 1s ease-out;
-        }
-
-        .hero p {
-            font-size: 1.3rem;
-            margin-bottom: 3rem;
-            opacity: 0.9;
-            animation: fadeInUp 1s ease-out 0.2s both;
-        }
-
-        .cta-button {
-            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
-            color: white;
-            padding: 1rem 3rem;
-            font-size: 1.2rem;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
-            animation: fadeInUp 1s ease-out 0.4s both;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.4);
-        }
-
-        .features {
-            padding: 6rem 0;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .feature-card {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 2rem;
-            border-radius: 20px;
-            text-align: center;
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        .feature-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .feature-card p {
-            opacity: 0.9;
-            line-height: 1.6;
-        }
-
-        .stats {
-            padding: 6rem 0;
-            text-align: center;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .stat-item {
-            color: white;
-        }
-
-        .stat-number {
-            font-size: 3rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            color: #ff6b6b;
-        }
-
-        .stat-label {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            color: white;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .section-subtitle {
-            text-align: center;
-            font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 2rem;
-        }
-
-        .footer {
-            background: rgba(0, 0, 0, 0.2);
-            padding: 3rem 0;
-            text-align: center;
-            color: rgba(255, 255, 255, 0.8);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .floating-elements {
-            position: fixed;
+        /* Animated background elements */
+        body::before {
+            content: '';
+            position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+            animation: floatBackground 20s ease-in-out infinite;
             z-index: -1;
         }
 
-        .floating-element {
+        @keyframes floatBackground {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 0.3;
+            }
+            50% {
+                transform: scale(1.1) rotate(2deg);
+                opacity: 0.5;
+            }
+        }
+
+        .auth-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 50px 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.25),
+                0 0 0 1px rgba(255, 255, 255, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-container::before {
+            content: '';
             position: absolute;
-            color: rgba(255, 255, 255, 0.1);
-            font-size: 2rem;
-            animation: float 6s ease-in-out infinite;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
+        .logo h1 {
+            background: linear-gradient(135deg, #ffffff 0%, #a8edea 50%, #fed6e3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .logo p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+
+        .form-toggle {
+            display: flex;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 14px;
+            text-align: center;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+
+        .toggle-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 
+                0 4px 15px rgba(102, 126, 234, 0.4),
+                0 2px 4px rgba(0, 0, 0, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .toggle-btn:hover:not(.active) {
+            color: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 16px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 
+                0 0 0 3px rgba(102, 126, 234, 0.2),
+                0 4px 12px rgba(102, 126, 234, 0.15);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 4px 15px rgba(102, 126, 234, 0.4),
+                0 2px 4px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 6px 20px rgba(102, 126, 234, 0.6),
+                0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 
+                0 4px 15px rgba(102, 126, 234, 0.2),
+                0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .message.success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.2) 100%);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .message.error {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.2) 100%);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .sleep-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+            animation: floatIcon 3s ease-in-out infinite;
+        }
+
+        @keyframes floatIcon {
+            0%, 100% {
+                transform: translateY(0px);
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            50% {
+                transform: translateY(-5px);
             }
         }
 
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .hero p {
-                font-size: 1.1rem;
-            }
-            
-            .features-grid {
-                grid-template-columns: 1fr;
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: 30px 20px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="floating-elements">
-        <div class="floating-element" style="top: 10%; left: 10%; animation-delay: 0s;">💤</div>
-        <div class="floating-element" style="top: 20%; right: 15%; animation-delay: 1s;">⭐</div>
-        <div class="floating-element" style="top: 60%; left: 20%; animation-delay: 2s;">🌙</div>
-        <div class="floating-element" style="top: 70%; right: 10%; animation-delay: 3s;">✨</div>
-        <div class="floating-element" style="top: 30%; left: 80%; animation-delay: 4s;">🛌</div>
-    </div>
-    <header class="header">
-        <div class="container">
-            <nav class="nav">
-                <div class="logo">SleepWell</div>
-                <ul class="nav-links">
-                    <li><a href="index.html"class="active" >Beranda</a></li>
-                    <li><a href="monitoring.html">Monitoring</a></li>
-                    <li><a href="tips.html">Tips</a></li>
-                    <li><a href="tentang.html">Tentang</a></li>
-                </ul>
-            </nav>
+    <div class="auth-container">
+        <div class="logo">
+            <div class="sleep-icon">🌙</div>
+            <h1>Sleep Monitor</h1>
+            <p>Pantau kualitas tidur Anda</p>
         </div>
-    </header>
 
-    <main>
-        <section class="hero" id="home">
-            <div class="container">
-                <h1>Monitor Kualitas Tidur Anda</h1>
-                <p>Dapatkan insight mendalam tentang pola tidur Anda dengan teknologi monitoring yang canggih</p>
-                <a href="monitoring.html" class="cta-button">Mulai Monitoring Sekarang</a>
+        <div class="form-toggle">
+            <button class="toggle-btn active" onclick="toggleForm('signin')">Sign In</button>
+            <button class="toggle-btn" onclick="toggleForm('signup')">Sign Up</button>
+        </div>
+
+        <form id="authForm">
+            <div class="form-group" id="nameGroup" style="display: none;">
+                <label for="fullName">Nama Lengkap</label>
+                <input type="text" id="fullName" placeholder="Masukkan nama lengkap">
             </div>
-        </section>
 
-        <section class="features" id="features">
-            <div class="container">
-                <h2 class="section-title">Fitur Unggulan</h2>
-                <p class="section-subtitle">Teknologi terdepan untuk kesehatan tidur yang optimal</p>
-                
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <span class="feature-icon">📊</span>
-                        <h3>Analisis Real-time</h3>
-                        <p>Pantau kualitas tidur Anda secara real-time dengan data yang akurat dan insight yang mendalam</p>
-                    </div>
-                    <div class="feature-card">
-                        <span class="feature-icon">🎯</span>
-                        <h3>Rekomendasi Personal</h3>
-                        <p>Dapatkan saran yang disesuaikan dengan pola tidur unik Anda untuk tidur yang lebih berkualitas</p>
-                    </div>
-                    <div class="feature-card">
-                        <span class="feature-icon">📈</span>
-                        <h3>Laporan Mendetail</h3>
-                        <p>Visualisasi data yang mudah dipahami dengan grafik dan statistik komprehensif</p>
-                    </div>
-                </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="Masukkan email" required>
             </div>
-        <script>
-                    // Smooth scrolling untuk navigasi
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
 
-        // Animasi counter untuk statistik
-        function animateCounter(element, target) {
-            let current = 0;
-            const increment = target / 100;
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= target) {
-                    current = target;
-                    clearInterval(timer);
-                }
-                if (target > 1000) {
-                    element.textContent = Math.floor(current / 1000) + 'K+';
-                } else if (target === 98) {
-                    element.textContent = Math.floor(current) + '%';
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Masukkan password" required>
+            </div>
+
+            <div class="form-group" id="confirmPasswordGroup" style="display: none;">
+                <label for="confirmPassword">Konfirmasi Password</label>
+                <input type="password" id="confirmPassword" placeholder="Konfirmasi password">
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                <span id="btnText">Sign In</span>
+            </button>
+        </form>
+
+        <div id="message"></div>
+    </div>
+
+    <script>
+        // Konfigurasi Supabase
+        const SUPABASE_URL = 'https://jihiocajzxsghtqzjegl.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppaGlvY2FqenhzZ2h0cXpqZWdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAyNDI4MTksImV4cCI6MjA2NTgxODgxOX0._S9Fsl5rS6v3o3Bl0owgCQii51LFtQYqMNAY36U_2mQ';
+
+        // Cek apakah Supabase sudah dimuat
+        let supabase;
+        
+        function initializeSupabase() {
+            try {
+                if (typeof window.supabase !== 'undefined') {
+                    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    console.log('Supabase initialized successfully');
+                    return true;
                 } else {
-                    element.textContent = Math.floor(current) + (target === 5 ? '★' : '');
+                    throw new Error('Supabase library not loaded');
                 }
-            }, 20);
+            } catch (error) {
+                console.error('Failed to initialize Supabase:', error);
+                showMessage('Gagal menginisialisasi koneksi database. Silakan refresh halaman.', 'error');
+                return false;
+            }
         }
 
-        // Intersection Observer untuk animasi ketika elemen terlihat
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const statNumbers = entry.target.querySelectorAll('.stat-number');
-                    statNumbers.forEach(stat => {
-                        const text = stat.textContent;
-                        if (text.includes('98%')) animateCounter(stat, 98);
-                        else if (text.includes('10K+')) animateCounter(stat, 10000);
-                        else if (text.includes('24/7')) stat.textContent = '24/7';
-                        else if (text.includes('5★')) animateCounter(stat, 5);
-                    });
+        // Initialize ketika DOM loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                if (!initializeSupabase()) {
+                    // Retry setelah 2 detik
+                    setTimeout(() => {
+                        if (initializeSupabase()) {
+                            setupAuthListener();
+                            checkExistingSession();
+                        }
+                    }, 2000);
+                } else {
+                    setupAuthListener();
+                    // Cek apakah user sudah login
+                    setTimeout(checkExistingSession, 500);
                 }
-            });
+            }, 1000);
         });
 
-        observer.observe(document.querySelector('.stats'));
+        let currentMode = 'signin';
 
-        // Efek paralaks sederhana
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const parallax = document.querySelector('.floating-elements');
-            if (parallax) {
-                parallax.style.transform = `translateY(${scrolled * 0.3}px)`;
+        function toggleForm(mode) {
+            currentMode = mode;
+            const nameGroup = document.getElementById('nameGroup');
+            const confirmPasswordGroup = document.getElementById('confirmPasswordGroup');
+            const btnText = document.getElementById('btnText');
+            const toggleBtns = document.querySelectorAll('.toggle-btn');
+
+            // Update toggle buttons
+            toggleBtns.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Clear form
+            document.getElementById('authForm').reset();
+            showMessage('', '');
+
+            if (mode === 'signup') {
+                nameGroup.style.display = 'block';
+                confirmPasswordGroup.style.display = 'block';
+                btnText.textContent = 'Sign Up';
+            } else {
+                nameGroup.style.display = 'none';
+                confirmPasswordGroup.style.display = 'none';
+                btnText.textContent = 'Sign In';
+            }
+        }
+
+        function showMessage(message, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = message;
+            messageDiv.className = type ? `message ${type}` : '';
+        }
+
+        function setLoading(isLoading) {
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+
+            if (isLoading) {
+                submitBtn.disabled = true;
+                btnText.innerHTML = '<span class="loading"></span>';
+            } else {
+                submitBtn.disabled = false;
+                btnText.textContent = currentMode === 'signin' ? 'Sign In' : 'Sign Up';
+            }
+        }
+
+        async function handleSignUp(email, password, fullName) {
+            if (!supabase) {
+                showMessage('Koneksi database belum siap. Silakan coba lagi.', 'error');
+                return;
+            }
+
+            try {
+                const { data, error } = await supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        data: {
+                            full_name: fullName
+                        }
+                    }
+                });
+
+                if (error) throw error;
+
+                if (data.user) {
+                    showMessage('Akun berhasil dibuat! Silakan cek email untuk verifikasi.', 'success');
+                    
+                    // Insert user data ke tabel users (opsional)
+                    const { error: insertError } = await supabase
+                        .from('users')
+                        .insert([
+                            {
+                                id: data.user.id,
+                                email: email,
+                                full_name: fullName,
+                                created_at: new Date().toISOString()
+                            }
+                        ]);
+
+                    if (insertError) {
+                        console.error('Error inserting user data:', insertError);
+                    }
+                }
+            } catch (error) {
+                showMessage(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function handleSignIn(email, password) {
+            if (!supabase) {
+                showMessage('Koneksi database belum siap. Silakan coba lagi.', 'error');
+                return;
+            }
+
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
+                if (error) throw error;
+
+                showMessage('Login berhasil! Mengalihkan ke halaman monitoring...', 'success');
+                
+                // Redirect ke halaman monitoring setelah login berhasil
+                setTimeout(() => {
+                    window.location.href = 'home.html';
+                }, 1500);
+
+            } catch (error) {
+                showMessage(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        document.getElementById('authForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const fullName = document.getElementById('fullName').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // Validasi
+            if (!email || !password) {
+                showMessage('Email dan password harus diisi!', 'error');
+                return;
+            }
+
+            if (currentMode === 'signup') {
+                if (!fullName) {
+                    showMessage('Nama lengkap harus diisi!', 'error');
+                    return;
+                }
+                
+                if (password !== confirmPassword) {
+                    showMessage('Password dan konfirmasi password tidak cocok!', 'error');
+                    return;
+                }
+
+                if (password.length < 6) {
+                    showMessage('Password minimal 6 karakter!', 'error');
+                    return;
+                }
+            }
+
+            setLoading(true);
+
+            try {
+                if (currentMode === 'signup') {
+                    await handleSignUp(email, password, fullName);
+                } else {
+                    await handleSignIn(email, password);
+                }
+            } finally {
+                setLoading(false);
             }
         });
 
-        </script>
-    </main>
+        // Check if user is already logged in
+        function setupAuthListener() {
+            if (!supabase) return;
+            
+            supabase.auth.onAuthStateChange((event, session) => {
+                if (event === 'SIGNED_IN' && session) {
+                    console.log('User is signed in:', session.user);
+                    // Hanya redirect jika ini adalah login baru, bukan saat halaman dimuat
+                    // Redirect dilakukan di handleSignIn function
+                } else if (event === 'SIGNED_OUT') {
+                    console.log('User is signed out');
+                    // Handle sign out - tetap di halaman login
+                }
+            });
+        }
 
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2025 SleepWell. Semua hak dilindungi. Tidur berkualitas untuk hidup yang lebih baik.</p>
-        </div>
-    </footer>
+        // Cek apakah user sudah login saat halaman dimuat
+        async function checkExistingSession() {
+            if (!supabase) return;
+            
+            try {
+                const { data: { session }, error } = await supabase.auth.getSession();
+                
+                if (error) {
+                    console.error('Error checking session:', error);
+                    return;
+                }
+                
+                if (session && session.user) {
+                    // User sudah login, tampilkan opsi untuk ke monitoring atau logout
+                    showSessionInfo(session.user);
+                }
+            } catch (error) {
+                console.error('Error checking existing session:', error);
+            }
+        }
+
+        function showSessionInfo(user) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.innerHTML = `
+                <div style="text-align: center; padding: 25px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.15) 100%); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 16px; color: #10b981; backdrop-filter: blur(10px);">
+                    <p style="margin-bottom: 20px; font-weight: 600;"><strong>✅ Anda sudah login sebagai:</strong><br><span style="color: rgba(255, 255, 255, 0.9);">${user.email}</span></p>
+                    <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                        <button onclick="goToMonitoring()" style="padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                            🏠 Ke Halaman Home
+                        </button>
+                        <button onclick="logout()" style="padding: 12px 24px; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                            🚪 Logout
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function goToMonitoring() {
+            window.location.href = 'monitoring.html';
+        }
+
+        async function logout() {
+            if (!supabase) return;
+            
+            try {
+                const { error } = await supabase.auth.signOut();
+                if (error) throw error;
+                
+                // Clear message dan reset form
+                showMessage('Berhasil logout.', 'success');
+                document.getElementById('authForm').reset();
+                
+                setTimeout(() => {
+                    showMessage('', '');
+                }, 2000);
+                
+            } catch (error) {
+                showMessage(`Error logout: ${error.message}`, 'error');
+            }
+        }
+    </script>
 </body>
 </html>
