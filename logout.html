@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sleep Monitor - Logout</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Animated background elements */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+            animation: floatBackground 20s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes floatBackground {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 0.3;
+            }
+            50% {
+                transform: scale(1.1) rotate(2deg);
+                opacity: 0.5;
+            }
+        }
+
+        .logout-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 60px 50px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.25),
+                0 0 0 1px rgba(255, 255, 255, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .logout-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        }
+
+        .logout-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+            animation: fadeInScale 1s ease-out;
+        }
+
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .logout-title {
+            background: linear-gradient(135deg, #ffffff 0%, #a8edea 50%, #fed6e3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 36px;
+            margin-bottom: 15px;
+            font-weight: 700;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .logout-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 18px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+
+        .logout-message {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.15) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 1s ease-out 0.9s both;
+        }
+
+        .logout-message h3 {
+            font-size: 20px;
+            color: #10b981;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .logout-message p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 1.2s both;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            display: inline-block;
+            min-width: 160px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 
+                0 4px 15px rgba(102, 126, 234, 0.4),
+                0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            color: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 
+                0 4px 15px rgba(0, 0, 0, 0.1),
+                0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 
+                0 6px 20px rgba(102, 126, 234, 0.6),
+                0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.1) 100%);
+            box-shadow: 
+                0 6px 20px rgba(255, 255, 255, 0.1),
+                0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #ffffff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .status-message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .status-message.success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.2) 100%);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-message.error {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.2) 100%);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        @media (max-width: 600px) {
+            .logout-container {
+                padding: 40px 30px;
+                max-width: 380px;
+            }
+
+            .logout-title {
+                font-size: 28px;
+            }
+
+            .logout-subtitle {
+                font-size: 16px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 280px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="logout-container">
+        <div class="logout-icon">👋</div>
+        
+        <h1 class="logout-title">Selamat Tinggal!</h1>
+        
+        <p class="logout-subtitle">
+            Terima kasih telah menggunakan Sleep Monitor.<br>
+            Semoga istirahat Anda berkualitas!
+        </p>
+
+        <div class="logout-message">
+            <h3>✅ Logout Berhasil</h3>
+            <p>Session Anda telah berakhir dengan aman. Data monitoring tidur Anda tetap tersimpan dan dapat diakses kembali saat login berikutnya.</p>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="goToLogin()" id="loginBtn">
+                🏠 Kembali ke login
+            </button>
+            <button class="btn btn-secondary" onclick="performLogout()" id="logoutBtn">
+                🚪 Logout Sekarang
+            </button>
+            
+        </div>
+
+        <div id="statusMessage"></div>
+    </div>
+
+    <script>
+        // Konfigurasi Supabase - ganti dengan kredensial Anda
+        const SUPABASE_URL = 'https://jihiocajzxsghtqzjegl.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppaGlvY2FqenhzZ2h0cXpqZWdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAyNDI4MTksImV4cCI6MjA2NTgxODgxOX0._S9Fsl5rS6v3o3Bl0owgCQii51LFtQYqMNAY36U_2mQ';
+
+        let supabase;
+
+        function initializeSupabase() {
+            try {
+                if (typeof window.supabase !== 'undefined') {
+                    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    console.log('Supabase initialized successfully for logout');
+                    return true;
+                } else {
+                    throw new Error('Supabase library not loaded');
+                }
+            } catch (error) {
+                console.error('Failed to initialize Supabase:', error);
+                showStatusMessage('Gagal menginisialisasi koneksi database.', 'error');
+                return false;
+            }
+        }
+
+        function showStatusMessage(message, type) {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.textContent = message;
+            statusDiv.className = type ? `status-message ${type}` : '';
+        }
+
+        function setButtonLoading(buttonId, isLoading, originalText) {
+            const btn = document.getElementById(buttonId);
+            if (isLoading) {
+                btn.disabled = true;
+                btn.innerHTML = `<span class="loading"></span>${originalText}`;
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        }
+
+        function goToLogin() {
+            setButtonLoading('loginBtn', true, 'Mengalihkan...');
+            
+            showStatusMessage('Mengalihkan ke halaman login...', 'success');
+            
+            setTimeout(() => {
+                // Ganti dengan nama file login Anda
+                window.location.href = 'login.html'; // atau 'index.html' sesuai nama file login Anda
+            }, 1000);
+        }
+
+        async function performLogout() {
+            if (!supabase) {
+                showStatusMessage('Koneksi database belum siap.', 'error');
+                return;
+            }
+
+            setButtonLoading('logoutBtn', true, 'Logging out...');
+            
+            try {
+                const { error } = await supabase.auth.signOut();
+                
+                if (error) {
+                    throw error;
+                }
+
+                showStatusMessage('Logout berhasil! Mengalihkan ke halaman login...', 'success');
+                
+                // Redirect ke halaman login setelah logout berhasil
+                setTimeout(() => {
+                    window.location.href = 'home.html'; // atau nama file login Anda
+                }, 2000);
+
+            } catch (error) {
+                console.error('Logout error:', error);
+                showStatusMessage(`Error saat logout: ${error.message}`, 'error');
+                setButtonLoading('logoutBtn', false, '🚪 Logout Sekarang');
+            }
+        }
+
+        // Auto-perform logout jika dipanggil dengan parameter
+        function checkAutoLogout() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('auto') === 'true') {
+                // Tampilkan pesan bahwa logout sedang diproses
+                showStatusMessage('Sedang memproses logout...', 'success');
+                setTimeout(performLogout, 1000);
+            }
+        }
+
+        // Cek status user saat halaman dimuat
+        async function checkUserStatus() {
+            if (!supabase) return;
+
+            try {
+                const { data: { session }, error } = await supabase.auth.getSession();
+                
+                if (error) {
+                    console.error('Error checking session:', error);
+                    return;
+                }
+                
+                if (!session) {
+                    // User sudah logout, bisa langsung ke login
+                    document.querySelector('.logout-message h3').textContent = '✅ Sudah Logout';
+                    document.querySelector('.logout-message p').textContent = 'Anda sudah dalam keadaan logout. Klik tombol di bawah untuk kembali ke halaman login.';
+                    document.getElementById('logoutBtn').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error checking user status:', error);
+            }
+        }
+
+        // Initialize when DOM loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                if (initializeSupabase()) {
+                    checkUserStatus();
+                    checkAutoLogout();
+                } else {
+                    // Retry setelah 2 detik
+                    setTimeout(() => {
+                        if (initializeSupabase()) {
+                            checkUserStatus();
+                            checkAutoLogout();
+                        }
+                    }, 2000);
+                }
+            }, 1000);
+        });
+
+        // Handle browser back button
+        window.addEventListener('popstate', () => {
+            goToLogin();
+        });
+    </script>
+</body>
+</html>
