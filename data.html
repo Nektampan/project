@@ -13,12 +13,11 @@
             box-sizing: border-box;
         }
         
-      body {
+        body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
-            color: #ffffff;
             min-height: 100vh;
-            overflow-x: hidden;
+            padding: 20px;
         }
         
         .dashboard-container {
@@ -293,11 +292,7 @@
 <body>
     <div class="dashboard-container">
         <div class="header">
-            <h1>📊 PSQI Analytics Dashboard</h1>
-            <p>Analisis Komprehensif Data Kualitas Tidur</p>
-            <button class="refresh-btn" onclick="loadDashboardData()">🔄 Refresh Data</button>
-        </div>
-         <ul class="nav-links">
+            <ul class="nav-links">
                 <li><a href="home.html">Beranda</a></li>
                 <li><a href="monitoring.html"class="active">Monitoring</a></li>
                 <li><a href="psqi.html">PSQI</a></li>
@@ -307,6 +302,10 @@
                 <li><a href="tentang.html">Tentang</a></li>
                 <li><a href="logout.html">Keluar</a></li>
                 </ul>
+            <h1>📊 PSQI Analytics Dashboard</h1>
+            <p>Analisis Komprehensif Data Kualitas Tidur</p>
+            <button class="refresh-btn" onclick="loadDashboardData()">🔄 Refresh Data</button>
+        </div>
         
         <div class="filter-container">
             <h3 style="margin-bottom: 15px; color: #2c3e50;">🔍 Filter Data</h3>
