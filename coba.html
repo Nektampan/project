@@ -852,44 +852,12 @@
             }
 
             // Add specific recommendations based on components
-            interpretation += '<p><strong>📋 Rekomendasi Spesifik:</strong></p><ul>';
-            
-            if (data.component2_sleep_latency >= 2) {
-                interpretation += '<li>🕒 <strong>Latensi Tidur:</strong> Cobalah teknik relaksasi sebelum tidur dan hindari layar gadget 1 jam sebelum tidur.</li>';
-            }
-            
-            if (data.component3_sleep_duration >= 2) {
-                interpretation += '<li>⏰ <strong>Durasi Tidur:</strong> Usahakan tidur 7-9 jam per malam dengan jadwal yang konsisten.</li>';
-            }
-            
-            if (data.component4_sleep_efficiency >= 2) {
-                interpretation += '<li>📊 <strong>Efisiensi Tidur:</strong> Gunakan tempat tidur hanya untuk tidur dan hindari aktivitas lain di tempat tidur.</li>';
-            }
-            
-            if (data.component5_sleep_disturbances >= 2) {
-                interpretation += '<li>🚫 <strong>Gangguan Tidur:</strong> Identifikasi dan atasi faktor-faktor yang mengganggu tidur Anda.</li>';
-            }
-            
-            if (data.component6_sleep_medication >= 1) {
-                interpretation += '<li>💊 <strong>Penggunaan Obat:</strong> Konsultasikan dengan dokter mengenai penggunaan obat tidur jangka panjang.</li>';
-            }
-            
-            if (data.component7_daytime_dysfunction >= 2) {
-                interpretation += '<li>☀️ <strong>Fungsi Siang Hari:</strong> Tingkatkan kualitas tidur malam untuk mengurangi kantuk dan meningkatkan produktivitas siang hari.</li>';
-            }
-            
-            interpretation += '</ul>';
+          
+
             
             // Add sleep hygiene tips
             interpretation += `
-                <p><strong>💡 Tips Kebersihan Tidur:</strong></p>
-                <ul>
-                    <li>Jaga jadwal tidur yang konsisten setiap hari</li>
-                    <li>Ciptakan lingkungan tidur yang nyaman (gelap, sejuk, tenang)</li>
-                    <li>Hindari kafein dan alkohol menjelang waktu tidur</li>
-                    <li>Lakukan aktivitas fisik teratur, namun tidak dekat waktu tidur</li>
-                    <li>Batasi tidur siang maksimal 30 menit sebelum jam 3 sore</li>
-                </ul>
+               
             `;
 
             return interpretation;
