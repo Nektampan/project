@@ -737,11 +737,16 @@
                 SleepWell
             </a>
             <ul class="nav-links">
-                <li><a href="home.html" >Beranda</a></li>
+                <ul class="nav-links">
+                <li><a href="home.html">Beranda</a></li>
                 <li><a href="monitoring.html"class="active">Monitoring</a></li>
+                <li><a href="psqi.html">PSQI</a></li>
+                <li><a href="data.html">data</a></li>
+                <li><a href="coba.html">Laporan</a></li>
                 <li><a href="tips.html">Tips</a></li>
                 <li><a href="tentang.html">Tentang</a></li>
                 <li><a href="logout.html">Keluar</a></li>
+            </ul>
 
             </ul>
             <div class="nav-toggle">
@@ -763,12 +768,6 @@
         </div>
 
         <div class="dashboard-stats" id="monitoring">
-            <div class="stat-card">
-                <div class="stat-icon"><i class="fas fa-bed"></i></div>
-                <div class="stat-title">Kualitas Tidur</div>
-                <div class="stat-value" id="currentQuality">--</div>
-                <div class="stat-unit">Persentase</div>
-            </div>
             <div class="stat-card">
                 <div class="stat-icon"><i class="fas fa-lightbulb"></i></div>
                 <div class="stat-title">Tingkat Cahaya</div>
@@ -1038,7 +1037,6 @@
         function updateStatusCards(latestData) {
             if (!latestData) return;
 
-            document.getElementById('currentQuality').textContent = latestData.sleep_quality_score;
             document.getElementById('currentLight').textContent = latestData.light_level;
             document.getElementById('currentSound').textContent = latestData.sound_level;
             document.getElementById('currentTemp').textContent = latestData.temperature;
@@ -1386,3 +1384,4 @@
     </script>
 </body>
 </html>
+
