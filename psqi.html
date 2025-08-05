@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PSQI - Pittsburgh Sleep Quality Index</title>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #4a6741);
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .config-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            display: none;
+        }
+        
+        .config-section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .config-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .input-group label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #495057;
+        }
+        
+        .input-group input {
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .connect-btn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 15px;
+        }
+        
+        .connect-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .form-section {
+            padding: 30px;
+        }
+        
+        .question-group {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .question-group h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+            cursor: pointer;
+        }
+        
+        .radio-option:hover {
+            background: #e9ecef;
+        }
+        
+        .radio-option input[type="radio"] {
+            margin-right: 10px;
+        }
+        
+        .submit-section {
+            padding: 30px;
+            background: #f8f9fa;
+            text-align: center;
+        }
+        
+        .participant-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,123,255,0.3);
+        }
+        
+        .submit-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .status-message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .hidden {
+            display: none;
+        }
+         .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+             <ul class="nav-links">
+                <li><a href="home.html">Beranda</a></li>
+                <li><a href="monitoring.html"class="active">Monitoring</a></li>
+                <li><a href="psqi.html">PSQI</a></li>
+                <li><a href="data.html">data</a></li>
+                <li><a href="coba.html">Laporan</a></li>
+                <li><a href="tips.html">Tips</a></li>
+                <li><a href="tentang.html">Tentang</a></li>
+                <li><a href="logout.html">Keluar</a></li>
+                </ul>
+            <h1>PSQI Assessment</h1>
+            <p>Pittsburgh Sleep Quality Index - Kuesioner Standar 19 Pertanyaan</p> - Evaluasi Kualitas Tidur</p>
+        </div>
+        <form id="psqiForm" class="form-section">
+            <div class="participant-info">
+                <div class="input-group">
+                    <label for="participantName">Nama Peserta</label>
+                    <input type="text" id="participantName" required>
+                </div>
+                <div class="input-group">
+                    <label for="participantAge">Usia</label>
+                    <input type="number" id="participantAge" min="1" max="120" required>
+                </div>
+                <div class="input-group">
+                    <label for="participantGender">Jenis Kelamin</label>
+                    <select id="participantGender" required style="padding: 10px; border: 2px solid #e9ecef; border-radius: 8px;">
+                        <option value="">Pilih...</option>
+                        <option value="L">Laki-laki</option>
+                        <option value="P">Perempuan</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="question-group">
+                <h4>1. Biasanya jam berapa Anda pergi tidur di malam hari?</h4>
+                <input type="time" name="bedtime" required style="padding: 10px; border: 2px solid #e9ecef; border-radius: 8px; width: 200px;">
+            </div>
+            
+            <div class="question-group">
+                <h4>2. Berapa lama waktu yang dibutuhkan untuk tertidur setiap malam? (menit)</h4>
+                <input type="number" name="sleep_latency_minutes" min="0" required style="padding: 10px; border: 2px solid #e9ecef; border-radius: 8px; width: 200px;" placeholder="menit">
+            </div>
+            
+            <div class="question-group">
+                <h4>3. Biasanya jam berapa Anda bangun di pagi hari?</h4>
+                <input type="time" name="wake_time" required style="padding: 10px; border: 2px solid #e9ecef; border-radius: 8px; width: 200px;">
+            </div>
+            
+            <div class="question-group">
+                <h4>4. Berapa jam tidur aktual yang Anda dapatkan di malam hari?</h4>
+                <input type="number" name="sleep_duration" min="0" max="12" step="0.5" required style="padding: 10px; border: 2px solid #e9ecef; border-radius: 8px; width: 200px;" placeholder="jam">
+            </div>
+            
+            <div class="question-group">
+                <h4>5a. Seberapa sering Anda tidak bisa tertidur dalam 30 menit?</h4>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="cannot_sleep_30min" value="0" required>
+                        Tidak pernah
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="cannot_sleep_30min" value="1" required>
+                        Kurang dari sekali seminggu
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="cannot_sleep_30min" value="2" required>
+                        Sekali atau dua kali seminggu
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="cannot_sleep_30min" value="3" required>
+                        Tiga kali atau lebih seminggu
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question-group">
+                <h4>5b. Seberapa sering Anda terbangun di tengah malam atau dini hari?</h4>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="wake_middle_night" value="0" required>
+                        Tidak pernah
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="wake_middle_night" value="1" required>
+                        Kurang dari sekali seminggu
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="wake_middle_night" value="2" required>
+                        Sekali atau dua kali seminggu
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="wake_middle_night" value="3" required>
+                        Tiga kali atau lebih seminggu
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question-group">
+                <h4>5c. Seberapa sering Anda harus bangun untuk ke kamar mandi?</h4>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="bathroom_trips" value="0" required>
+                        Tidak pernah
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="bathroom_trips" value="1" required>
+                        Kurang dari sekali seminggu
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="bathroom_trips" value="2" required>
+                        Sekali atau dua kali seminggu
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="bathroom_trips" value="3" required>
+                        Tiga kali atau lebih seminggu
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question-group">
+                <h4>5d. Seberapa sering Anda tidak bisa bernapas dengan nyaman?</h4>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="breathing_problems" value="0" required>
+                        Tidak pernah
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="breathing_problems" value="1" required>
+                        Kurang dari sekali seminggu
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="breathing_problems" value="2" required>
+                        Sekali atau dua kali seminggu
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="breathing_problems" value="3" required>
+                        Tiga kali atau lebih seminggu
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question-group">
+                <h4>5e. Seberapa sering Anda batuk atau mendengkur keras?</h4>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="cough_snore" value="0" required>
+                        Tidak pernah
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="cough_snore" value="1" required>
+                        Kurang dari sekali seminggu
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="cough_snore" value="2" required>
+                        Sekali atau dua kali seminggu
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="cough_snore" value="3" required>
+                        Tiga kali atau lebih seminggu
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question-group">
+                <h4>5f. Seberapa sering Anda merasa terlalu dingin?</h4>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="too_cold" value="0" required>
+                        Tidak pernah
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="too_cold" value="1" required>
+                        Kurang dari sekali seminggu
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="too_cold" value="2" required>
+                        Sekali atau dua kali seminggu
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="too_cold" value="3" required>
+                        Tiga kali atau lebih seminggu
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question-group">
+                <h4>5g. Seberapa sering Anda merasa terlalu panas?</h4>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="too_hot" value="0" required>
+                        Tidak pernah
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="too_hot" value="1" required>
+                        Kurang dari sekali seminggu
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="too_hot" value="2" required>
+                        Sekali atau dua kali seminggu
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="too_hot" value="3" required>
+                        Tiga kali atau lebih seminggu
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question-group">
+                <h4>5h. Seberapa sering Anda mengalami mimpi buruk?</h4>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="bad_dreams" value="0" required>
+                        Tidak pernah
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="bad_dreams" value="1" required>
+                        Kurang dari sekali seminggu
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="bad_dreams" value="2" required>
+                        Sekali atau dua kali seminggu
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="bad_dreams" value="3" required>
+                        Tiga kali atau lebih seminggu
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question-group">
+                <h4>5i. Seberapa sering Anda mengalami nyeri?</h4>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="pain" value="0" required>
+                        Tidak pernah
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="pain" value="1" required>
+                        Kurang dari sekali seminggu
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="pain" value="2" required>
+                        Sekali atau dua kali seminggu
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="pain" value="3" required>
+                        Tiga kali atau lebih seminggu
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question-group">
+                <h4>5j. Alasan lain yang mengganggu tidur Anda?</h4>
+                <textarea name="other_reasons" style="width: 100%; padding: 10px; border: 2px solid #e9ecef; border-radius: 8px; min-height: 80px;" placeholder="Tuliskan alasan lain (opsional)"></textarea>
+                <div class="radio-group" style="margin-top: 10px;">
+                    <label class="radio-option">
+                        <input type="radio" name="other_frequency" value="0" required>
+                        Tidak pernah
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="other_frequency" value="1" required>
+                        Kurang dari sekali seminggu
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="other_frequency" value="2" required>
+                        Sekali atau dua kali seminggu
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="other_frequency" value="3" required>
+                        Tiga kali atau lebih seminggu
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question-group">
+                <h4>6. Bagaimana kualitas tidur Anda secara keseluruhan?</h4>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="sleep_quality" value="0" required>
+                        Sangat baik
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="sleep_quality" value="1" required>
+                        Cukup baik
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="sleep_quality" value="2" required>
+                        Cukup buruk
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="sleep_quality" value="3" required>
+                        Sangat buruk
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question-group">
+                <h4>7. Seberapa sering Anda menggunakan obat tidur?</h4>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="sleep_medication" value="0" required>
+                        Tidak pernah
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="sleep_medication" value="1" required>
+                        Kurang dari sekali seminggu
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="sleep_medication" value="2" required>
+                        Sekali atau dua kali seminggu
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="sleep_medication" value="3" required>
+                        Tiga kali atau lebih seminggu
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question-group">
+                <h4>8. Seberapa sering Anda kesulitan tetap terjaga saat mengemudi, makan, atau beraktivitas sosial?</h4>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="daytime_dysfunction" value="0" required>
+                        Tidak pernah menjadi masalah
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="daytime_dysfunction" value="1" required>
+                        Sedikit menjadi masalah
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="daytime_dysfunction" value="2" required>
+                        Cukup menjadi masalah
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="daytime_dysfunction" value="3" required>
+                        Sangat menjadi masalah
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question-group">
+                <h4>9. Seberapa antusias Anda dalam melakukan aktivitas harian?</h4>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="enthusiasm" value="0" required>
+                        Tidak pernah menjadi masalah
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="enthusiasm" value="1" required>
+                        Sedikit menjadi masalah
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="enthusiasm" value="2" required>
+                        Cukup menjadi masalah
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="enthusiasm" value="3" required>
+                        Sangat menjadi masalah
+                    </label>
+                </div>
+            </div>
+        </form>
+        
+        <div class="submit-section">
+            <button type="submit" class="submit-btn" onclick="submitForm()">Kirim Assessment</button>
+            <div id="submitStatus" class="status-message hidden"></div>
+        </div>
+    </div>
+
+    <script>
+        // Konfigurasi Supabase - Hardcoded
+        const SUPABASE_URL = 'https://jihiocajzxsghtqzjegl.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppaGlvY2FqenhzZ2h0cXpqZWdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAyNDI4MTksImV4cCI6MjA2NTgxODgxOX0._S9Fsl5rS6v3o3Bl0owgCQii51LFtQYqMNAY36U_2mQ';
+        
+        let supabaseClient = null;
+        
+        // Inisialisasi Supabase saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log('✅ Supabase berhasil diinisialisasi');
+            } catch (error) {
+                console.error('❌ Gagal menginisialisasi Supabase:', error);
+            }
+        });
+        
+        async function testConnection() {
+            try {
+                // Coba membuat tabel jika belum ada
+                const { error } = await supabaseClient
+                    .from('psqi_responses')
+                    .select('count', { count: 'exact', head: true });
+                
+                if (error && error.code === '42P01') {
+                    showStatus('connectionStatus', '⚠️ Tabel "psqi_responses" belum ada. Silakan buat tabel terlebih dahulu.', 'info');
+                }
+            } catch (error) {
+                console.log('Test connection:', error);
+            }
+        }
+        
+        function showStatus(elementId, message, type) {
+            const statusDiv = document.getElementById(elementId);
+            statusDiv.className = `status-message status-${type}`;
+            statusDiv.textContent = message;
+            statusDiv.classList.remove('hidden');
+            
+            if (type === 'success') {
+                setTimeout(() => {
+                    statusDiv.classList.add('hidden');
+                }, 5000);
+            }
+        }
+        
+        function calculatePSQIScore(formData) {
+            // Component 1: Subjective Sleep Quality
+            const comp1 = parseInt(formData.sleep_quality);
+            
+            // Component 2: Sleep Latency
+            const sleepLatencyMinutes = parseInt(formData.sleep_latency_minutes || 0);
+            let latencyScore = 0;
+            if (sleepLatencyMinutes <= 15) latencyScore = 0;
+            else if (sleepLatencyMinutes <= 30) latencyScore = 1;
+            else if (sleepLatencyMinutes <= 60) latencyScore = 2;
+            else latencyScore = 3;
+            
+            const cannotSleep30 = parseInt(formData.cannot_sleep_30min);
+            const comp2 = Math.min(latencyScore + cannotSleep30, 3);
+            
+            // Component 3: Sleep Duration
+            const sleepDuration = parseFloat(formData.sleep_duration);
+            let comp3 = 0;
+            if (sleepDuration >= 7) comp3 = 0;
+            else if (sleepDuration >= 6) comp3 = 1;
+            else if (sleepDuration >= 5) comp3 = 2;
+            else comp3 = 3;
+            
+            // Component 4: Sleep Efficiency (simplified calculation)
+            let comp4 = 0;
+            if (sleepDuration >= 6) comp4 = 0;
+            else if (sleepDuration >= 5) comp4 = 1;
+            else if (sleepDuration >= 4) comp4 = 2;
+            else comp4 = 3;
+            
+            // Component 5: Sleep Disturbances
+            const disturbances = [
+                parseInt(formData.wake_middle_night),
+                parseInt(formData.bathroom_trips),
+                parseInt(formData.breathing_problems),
+                parseInt(formData.cough_snore),
+                parseInt(formData.too_cold),
+                parseInt(formData.too_hot),
+                parseInt(formData.bad_dreams),
+                parseInt(formData.pain),
+                parseInt(formData.other_frequency)
+            ];
+            
+            const totalDisturbances = disturbances.reduce((sum, val) => sum + val, 0);
+            let comp5 = 0;
+            if (totalDisturbances === 0) comp5 = 0;
+            else if (totalDisturbances <= 9) comp5 = 1;
+            else if (totalDisturbances <= 18) comp5 = 2;
+            else comp5 = 3;
+            
+            // Component 6: Use of Sleep Medications
+            const comp6 = parseInt(formData.sleep_medication);
+            
+            // Component 7: Daytime Dysfunction
+            const daytimeDysfunction = parseInt(formData.daytime_dysfunction);
+            const enthusiasm = parseInt(formData.enthusiasm);
+            const comp7 = Math.min(daytimeDysfunction + enthusiasm, 3);
+            
+            const totalScore = comp1 + comp2 + comp3 + comp4 + comp5 + comp6 + comp7;
+            
+            return {
+                component1_sleep_quality: comp1,
+                component2_sleep_latency: comp2,
+                component3_sleep_duration: comp3,
+                component4_sleep_efficiency: comp4,
+                component5_sleep_disturbances: comp5,
+                component6_sleep_medication: comp6,
+                component7_daytime_dysfunction: comp7,
+                total_score: totalScore,
+                sleep_quality_category: totalScore <= 5 ? 'Good' : totalScore <= 10 ? 'Fair' : 'Poor'
+            };
+        }
+        
+        async function submitForm() {
+            if (!supabaseClient) {
+                showStatus('submitStatus', '❌ Belum terhubung ke Supabase', 'error');
+                return;
+            }
+            
+            const form = document.getElementById('psqiForm');
+            const formData = new FormData(form);
+            
+            // Get participant info
+            const participantName = document.getElementById('participantName').value;
+            const participantAge = document.getElementById('participantAge').value;
+            const participantGender = document.getElementById('participantGender').value;
+            
+            if (!participantName || !participantAge || !participantGender) {
+                showStatus('submitStatus', '❌ Mohon lengkapi data peserta', 'error');
+                return;
+            }
+            
+            // Convert FormData to object
+            const responses = {};
+            for (let [key, value] of formData.entries()) {
+                responses[key] = value;
+            }
+            
+            // Calculate PSQI score
+            const scores = calculatePSQIScore(responses);
+            
+            // Prepare data for Supabase
+            const dataToInsert = {
+                participant_name: participantName,
+                participant_age: parseInt(participantAge),
+                participant_gender: participantGender,
+                bedtime: responses.bedtime,
+                sleep_latency_minutes: parseInt(responses.sleep_latency_minutes || 0),
+                wake_time: responses.wake_time,
+                sleep_duration: parseFloat(responses.sleep_duration),
+                cannot_sleep_30min: parseInt(responses.cannot_sleep_30min),
+                wake_middle_night: parseInt(responses.wake_middle_night),
+                bathroom_trips: parseInt(responses.bathroom_trips),
+                breathing_problems: parseInt(responses.breathing_problems),
+                cough_snore: parseInt(responses.cough_snore),
+                too_cold: parseInt(responses.too_cold),
+                too_hot: parseInt(responses.too_hot),
+                bad_dreams: parseInt(responses.bad_dreams),
+                pain: parseInt(responses.pain),
+                other_reasons: responses.other_reasons || '',
+                other_frequency: parseInt(responses.other_frequency),
+                sleep_quality: parseInt(responses.sleep_quality),
+                sleep_medication: parseInt(responses.sleep_medication),
+                daytime_dysfunction: parseInt(responses.daytime_dysfunction),
+                enthusiasm: parseInt(responses.enthusiasm),
+                ...scores,
+                created_at: new Date().toISOString()
+            };
+            
+            try {
+                showStatus('submitStatus', '📤 Mengirim data...', 'info');
+                
+                const { data, error } = await supabaseClient
+                    .from('psqi_responses')
+                    .insert([dataToInsert]);
+                
+                if (error) {
+                    throw error;
+                }
+                
+                showStatus('submitStatus', `✅ Data berhasil disimpan! PSQI Score: ${scores.total_score} (${scores.sleep_quality_category})`, 'success');
+                
+                // Reset form
+                form.reset();
+                document.getElementById('participantName').value = '';
+                document.getElementById('participantAge').value = '';
+                document.getElementById('participantGender').value = '';
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showStatus('submitStatus', '❌ Gagal menyimpan data: ' + error.message, 'error');
+            }
+        }
+        
+        // Add form validation
+        document.getElementById('psqiForm').addEventListener('change', function() {
+            const requiredFields = this.querySelectorAll('[required]');
+            const participantName = document.getElementById('participantName').value;
+            const participantAge = document.getElementById('participantAge').value;
+            const participantGender = document.getElementById('participantGender').value;
+            
+            let allFilled = participantName && participantAge && participantGender;
+            
+            for (let field of requiredFields) {
+                if (!field.value && field.type !== 'radio') {
+                    allFilled = false;
+                    break;
+                }
+            }
+            
+            // Check radio groups
+            const radioGroups = [
+                'cannot_sleep_30min', 'wake_middle_night', 'bathroom_trips', 'breathing_problems',
+                'cough_snore', 'too_cold', 'too_hot', 'bad_dreams', 'pain', 'other_frequency',
+                'sleep_quality', 'sleep_medication', 'daytime_dysfunction', 'enthusiasm'
+            ];
+            for (let group of radioGroups) {
+                const checked = document.querySelector(`input[name="${group}"]:checked`);
+                if (!checked) {
+                    allFilled = false;
+                    break;
+                }
+            }
+            
+            document.querySelector('.submit-btn').disabled = !allFilled;
+        });
+    </script>
+</body>
+</html>
