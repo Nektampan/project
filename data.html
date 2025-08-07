@@ -6,8 +6,9 @@
     <title>PSQI Analytics Dashboard</title>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-      :root {
+    :root {
     --night-primary: #0f0f23;
     --night-secondary: #1a1a2e;
     --night-tertiary: #16213e;
@@ -643,6 +644,49 @@ body::after {
         font-size: 2.5rem;
     }
 }
+.export-buttons {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .export-btn, .download-btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .export-btn {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+        }
+
+        .export-btn:hover {
+            background: linear-gradient(135deg, #219a52 0%, #27ae60 100%);
+            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .download-btn:hover {
+            background: linear-gradient(135deg, #2980b9 0%, #1f639a 100%);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -650,14 +694,14 @@ body::after {
         <div class="header">
             <ul class="nav-links">
                 <li><a href="home.html">Beranda</a></li>
-                <li><a href="monitoring.html"class="active">Monitoring</a></li>
+                <li><a href="monitoring.html" class="active">Monitoring</a></li>
                 <li><a href="psqi.html">PSQI</a></li>
                 <li><a href="data.html">data</a></li>
                 <li><a href="coba.html">Laporan</a></li>
                 <li><a href="tips.html">Tips</a></li>
                 <li><a href="tentang.html">Tentang</a></li>
                 <li><a href="logout.html">Keluar</a></li>
-                </ul>
+            </ul>
             <h1>📊 PSQI Analytics Dashboard</h1>
             <p>Analisis Komprehensif Data Kualitas Tidur</p>
             <button class="refresh-btn" onclick="loadDashboardData()">🔄 Refresh Data</button>
@@ -736,32 +780,62 @@ body::after {
             
             <div class="charts-grid">
                 <div class="chart-container">
-                    <div class="chart-title">Distribusi Kualitas Tidur</div>
+                    <div class="chart-header">
+                        <div class="chart-title">Distribusi Kualitas Tidur</div>
+                        <button class="download-btn" onclick="downloadChart('qualityDistributionChart', 'Distribusi_Kualitas_Tidur')">
+                            📥 Unduh PNG
+                        </button>
+                    </div>
                     <canvas id="qualityDistributionChart" class="chart-canvas"></canvas>
                 </div>
                 
                 <div class="chart-container">
-                    <div class="chart-title">Distribusi Skor PSQI</div>
+                    <div class="chart-header">
+                        <div class="chart-title">Distribusi Skor PSQI</div>
+                        <button class="download-btn" onclick="downloadChart('scoreDistributionChart', 'Distribusi_Skor_PSQI')">
+                            📥 Unduh PNG
+                        </button>
+                    </div>
                     <canvas id="scoreDistributionChart" class="chart-canvas"></canvas>
                 </div>
                 
                 <div class="chart-container">
-                    <div class="chart-title">Kualitas Tidur berdasarkan Jenis Kelamin</div>
+                    <div class="chart-header">
+                        <div class="chart-title">Kualitas Tidur berdasarkan Jenis Kelamin</div>
+                        <button class="download-btn" onclick="downloadChart('genderChart', 'Kualitas_Tidur_Gender')">
+                            📥 Unduh PNG
+                        </button>
+                    </div>
                     <canvas id="genderChart" class="chart-canvas"></canvas>
                 </div>
                 
                 <div class="chart-container">
-                    <div class="chart-title">Kualitas Tidur berdasarkan Usia</div>
+                    <div class="chart-header">
+                        <div class="chart-title">Kualitas Tidur berdasarkan Usia</div>
+                        <button class="download-btn" onclick="downloadChart('ageChart', 'Kualitas_Tidur_Usia')">
+                            📥 Unduh PNG
+                        </button>
+                    </div>
                     <canvas id="ageChart" class="chart-canvas"></canvas>
                 </div>
                 
                 <div class="chart-container">
-                    <div class="chart-title">Distribusi Durasi Tidur</div>
+                    <div class="chart-header">
+                        <div class="chart-title">Distribusi Durasi Tidur</div>
+                        <button class="download-btn" onclick="downloadChart('sleepDurationChart', 'Distribusi_Durasi_Tidur')">
+                            📥 Unduh PNG
+                        </button>
+                    </div>
                     <canvas id="sleepDurationChart" class="chart-canvas"></canvas>
                 </div>
                 
                 <div class="chart-container">
-                    <div class="chart-title">Analisis 7 Komponen PSQI</div>
+                    <div class="chart-header">
+                        <div class="chart-title">Analisis 7 Komponen PSQI</div>
+                        <button class="download-btn" onclick="downloadChart('componentsChart', 'Komponen_PSQI')">
+                            📥 Unduh PNG
+                        </button>
+                    </div>
                     <canvas id="componentsChart" class="chart-canvas"></canvas>
                 </div>
             </div>
@@ -784,7 +858,14 @@ body::after {
             </div>
             
             <div class="data-table-container">
-                <h3 style="color: #2c3e50; margin-bottom: 15px;">📋 Data Terbaru</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h3 style="color: #2c3e50; margin: 0;">📋 Data Terbaru</h3>
+                    <div class="export-buttons">
+                        <button class="export-btn" onclick="exportToExcel()">
+                            📊 Export ke Excel
+                        </button>
+                    </div>
+                </div>
                 <table class="data-table" id="recentDataTable">
                     <thead>
                         <tr>
@@ -852,6 +933,106 @@ body::after {
             } finally {
                 document.getElementById('loadingIndicator').style.display = 'none';
             }
+        }
+
+        // Fungsi Export ke Excel
+        function exportToExcel() {
+            if (filteredData.length === 0) {
+                alert('Tidak ada data untuk diekspor');
+                return;
+            }
+
+            // Siapkan data untuk Excel
+            const excelData = filteredData.map((item, index) => ({
+                'No': index + 1,
+                'Nama': item.participant_name,
+                'Usia': item.participant_age,
+                'Jenis Kelamin': item.participant_gender === 'P' ? 'Perempuan' : 'Laki-laki',
+                'Skor PSQI': item.total_score,
+                'Kategori Kualitas Tidur': item.sleep_quality_category,
+                'Durasi Tidur (jam)': item.sleep_duration,
+                'Kualitas Tidur Subjektif': item.component1_sleep_quality,
+                'Latensi Tidur': item.component2_sleep_latency,
+                'Efisiensi Tidur': item.component4_sleep_efficiency,
+                'Gangguan Tidur': item.component5_sleep_disturbances,
+                'Penggunaan Obat Tidur': item.component6_sleep_medication,
+                'Disfungsi Siang Hari': item.component7_daytime_dysfunction,
+                'Tanggal Assessment': new Date(item.created_at).toLocaleDateString('id-ID')
+            }));
+
+            // Buat workbook
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(excelData);
+
+            // Set lebar kolom
+            const wscols = [
+                {wch: 5},   // No
+                {wch: 20},  // Nama
+                {wch: 8},   // Usia
+                {wch: 15},  // Jenis Kelamin
+                {wch: 12},  // Skor PSQI
+                {wch: 20},  // Kategori
+                {wch: 18},  // Durasi Tidur
+                {wch: 25},  // Kualitas Tidur Subjektif
+                {wch: 15},  // Latensi Tidur
+                {wch: 15},  // Efisiensi Tidur
+                {wch: 18},  // Gangguan Tidur
+                {wch: 20},  // Penggunaan Obat
+                {wch: 20},  // Disfungsi Siang
+                {wch: 18}   // Tanggal
+            ];
+            ws['!cols'] = wscols;
+
+            // Tambahkan worksheet ke workbook
+            XLSX.utils.book_append_sheet(wb, ws, "Data PSQI");
+
+            // Generate nama file dengan timestamp
+            const today = new Date();
+            const dateString = today.toISOString().split('T')[0];
+            const filename = `Data_PSQI_${dateString}.xlsx`;
+
+            // Download file
+            XLSX.writeFile(wb, filename);
+
+            // Tampilkan notifikasi sukses
+            const originalText = event.target.innerHTML;
+            event.target.innerHTML = '✅ Berhasil diunduh!';
+            event.target.style.background = 'linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)';
+            
+            setTimeout(() => {
+                event.target.innerHTML = originalText;
+                event.target.style.background = 'linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)';
+            }, 2000);
+        }
+
+        // Fungsi Download Chart sebagai PNG
+        function downloadChart(chartId, filename) {
+            const canvas = document.getElementById(chartId);
+            if (!canvas) {
+                alert('Chart tidak ditemukan');
+                return;
+            }
+
+            // Buat link download
+            const link = document.createElement('a');
+            link.download = `${filename}_${new Date().toISOString().split('T')[0]}.png`;
+            link.href = canvas.toDataURL('image/png');
+            
+            // Klik otomatis untuk download
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Animasi feedback tombol
+            const button = event.target;
+            const originalText = button.innerHTML;
+            button.innerHTML = '✅ Terunduh!';
+            button.style.background = 'linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)';
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.style.background = 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)';
+            }, 2000);
         }
         
         function applyFilters() {
@@ -1244,7 +1425,7 @@ body::after {
                 row.innerHTML = `
                     <td>${item.participant_name}</td>
                     <td>${item.participant_age}</td>
-                    <td>${item.participant_gender === 'L' ? 'Laki-laki' : 'Perempuan'}</td>
+                    <td>${item.participant_gender === 'P' ? 'Perempuan' : 'Laki-laki'}</td>
                     <td>${item.total_score}</td>
                     <td><span class="${badgeClass}">${item.sleep_quality_category}</span></td>
                     <td>${item.sleep_duration} jam</td>
@@ -1263,4 +1444,3 @@ body::after {
     </script>
 </body>
 </html>
-
