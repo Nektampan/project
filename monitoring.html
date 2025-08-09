@@ -8,20 +8,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* CSS Styles */
         :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --secondary-gradient: linear-gradient(45deg, #667eea, #764ba2);
-            --accent-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            --card-bg: rgba(255, 255, 255, 0.08);
-            --card-border: rgba(255, 255, 255, 0.15);
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --text-light: #ffffff;
-            --text-muted: rgba(255, 255, 255, 0.75);
-            --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            --glow: 0 0 30px rgba(102, 126, 234, 0.3);
-            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --accent-color: #f093fb;
+            --background-dark: #0f0f23;
+            --background-secondary: #1a1a2e;
+            --card-background: rgba(26, 26, 46, 0.8);
+            --text-light: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
         }
 
         * {
@@ -31,45 +31,27 @@
         }
 
         body {
-            font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #1e3c72 100%);
-            color: #ffffff;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--background-dark) 0%, var(--background-secondary) 100%);
+            color: var(--text-light);
+            line-height: 1.6;
             min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
         }
 
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(240, 147, 251, 0.05) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        /* Navigation Styles */
+        /* Navigation */
         .navbar {
             position: fixed;
             top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0, 0, 0, 0.85);
+            width: 100%;
+            background: rgba(15, 15, 35, 0.95);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--card-border);
+            border-bottom: 1px solid var(--border-color);
             z-index: 1000;
             padding: 0 20px;
-            transition: var(--transition);
         }
 
         .nav-container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -80,164 +62,130 @@
         .nav-logo {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
+            color: var(--primary-color);
+            text-decoration: none;
             font-size: 1.5rem;
             font-weight: 700;
-            color: var(--text-light);
-            text-decoration: none;
-        }
-
-        .nav-logo i {
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-size: 1.8rem;
         }
 
         .nav-links {
             display: flex;
             list-style: none;
-            gap: 35px;
-            align-items: center;
+            gap: 30px;
         }
 
         .nav-links a {
             color: var(--text-muted);
             text-decoration: none;
             font-weight: 500;
-            font-size: 1rem;
-            transition: var(--transition);
-            position: relative;
-            padding: 8px 16px;
-            border-radius: 25px;
+            transition: all 0.3s ease;
+            padding: 5px 0;
+            border-bottom: 2px solid transparent;
         }
 
-        .nav-links a:hover {
-            color: var(--text-light);
-            background: var(--glass-bg);
-            transform: translateY(-2px);
-        }
-
+        .nav-links a:hover,
         .nav-links a.active {
-            background: var(--primary-gradient);
-            color: white;
-            box-shadow: var(--glow);
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
         }
 
         .nav-toggle {
             display: none;
             flex-direction: column;
             cursor: pointer;
-            gap: 4px;
         }
 
         .nav-toggle span {
             width: 25px;
             height: 3px;
             background: var(--text-light);
-            border-radius: 3px;
-            transition: var(--transition);
+            margin: 3px 0;
+            transition: 0.3s;
         }
 
+        /* Main Container */
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 100px 20px 20px;
+            padding: 100px 20px 50px;
         }
 
+        /* Header */
         .header {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--card-border);
-            border-radius: 30px;
-            padding: 50px 40px;
-            margin-bottom: 40px;
             text-align: center;
-            box-shadow: var(--shadow);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, transparent, rgba(102, 126, 234, 0.1), transparent);
-            animation: rotate 20s linear infinite;
-            z-index: -1;
-        }
-
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            margin-bottom: 50px;
         }
 
         .header h1 {
-            font-size: 3.5rem;
-            margin-bottom: 15px;
-            background: linear-gradient(135deg, #ffffff 0%, #667eea 50%, #764ba2 100%);
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            font-weight: 800;
-            letter-spacing: -0.02em;
+            background-clip: text;
         }
 
-        .header .subtitle {
-            font-size: 1.3rem;
+        .subtitle {
+            font-size: 1.2rem;
             color: var(--text-muted);
-            max-width: 700px;
-            margin: 0 auto 25px;
-            line-height: 1.6;
+            margin-bottom: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .header .status-indicator {
+        .status-indicator {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            background: var(--success-gradient);
-            color: white;
-            padding: 8px 20px;
+            gap: 10px;
+            background: var(--card-background);
+            padding: 12px 24px;
             border-radius: 50px;
+            border: 1px solid var(--border-color);
+            color: var(--success-color);
             font-weight: 600;
-            font-size: 0.9rem;
-            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
         }
 
-        .status-indicator .pulse {
-            width: 8px;
-            height: 8px;
-            background: white;
+        .pulse {
+            width: 10px;
+            height: 10px;
+            background: var(--success-color);
             border-radius: 50%;
             animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.2); opacity: 0.7; }
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
         }
 
+        /* Dashboard Stats */
         .dashboard-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 25px;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
         }
 
         .stat-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(15px);
-            border: 1px solid var(--card-border);
-            border-radius: 25px;
-            padding: 35px 25px;
+            background: var(--card-background);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px;
             text-align: center;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+            border-color: var(--primary-color);
         }
 
         .stat-card::before {
@@ -245,155 +193,104 @@
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--primary-gradient);
-            transform: scaleX(0);
-            transition: var(--transition);
-        }
-
-        .stat-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: var(--shadow), var(--glow);
-        }
-
-        .stat-card:hover::before {
-            transform: scaleX(1);
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
         }
 
         .stat-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 20px;
-            background: var(--primary-gradient);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.2rem;
-            color: white;
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
         }
 
         .stat-title {
-            font-size: 1.1rem;
+            font-size: 0.9rem;
             color: var(--text-muted);
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             font-weight: 600;
         }
 
         .stat-value {
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             font-weight: 800;
             color: var(--text-light);
-            margin-bottom: 8px;
-            font-family: 'SF Mono', 'Monaco', 'Cascadia Code', monospace;
+            margin-bottom: 5px;
         }
 
         .stat-unit {
-            font-size: 1rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
             font-weight: 500;
         }
 
+        /* Charts Container */
         .charts-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
         }
 
         .chart-container {
-            background: var(--card-bg);
-            backdrop-filter: blur(15px);
-            border: 1px solid var(--card-border);
-            border-radius: 25px;
-            padding: 35px;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .chart-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: var(--accent-gradient);
-        }
-
-        .chart-container:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow), 0 0 40px rgba(102, 126, 234, 0.2);
+            background: var(--card-background);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 25px;
+            height: 400px;
         }
 
         .chart-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .chart-title {
-            font-size: 1.6rem;
+            font-size: 1.2rem;
             font-weight: 700;
             color: var(--text-light);
         }
 
         .chart-actions {
             display: flex;
-            gap: 12px;
+            gap: 10px;
         }
 
         .chart-btn {
-            background: var(--glass-bg);
-            border: 1px solid var(--card-border);
-            color: var(--text-light);
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: var(--transition);
-            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            color: white;
         }
 
         .chart-btn:hover {
-            background: var(--primary-gradient);
+            background: var(--secondary-color);
             transform: scale(1.1);
-            box-shadow: var(--glow);
         }
 
         .chart-canvas-container {
-            height: 350px;
+            height: calc(100% - 60px);
             position: relative;
         }
 
+        /* Data Section */
         .data-section {
-            background: var(--card-bg);
-            backdrop-filter: blur(15px);
-            border: 1px solid var(--card-border);
-            border-radius: 25px;
-            padding: 35px;
-            box-shadow: var(--shadow);
-            margin-bottom: 40px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .data-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--warning-gradient);
+            background: var(--card-background);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
         }
 
         .section-header {
@@ -406,7 +303,7 @@
         }
 
         .section-title {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: var(--text-light);
         }
@@ -414,148 +311,119 @@
         .action-buttons {
             display: flex;
             gap: 15px;
+            flex-wrap: wrap;
         }
 
         .btn {
-            padding: 14px 30px;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 600;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
             cursor: pointer;
-            transition: var(--transition);
+            font-weight: 600;
+            font-size: 0.9rem;
             display: flex;
             align-items: center;
-            gap: 10px;
-            border: none;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: var(--transition);
-        }
-
-        .btn:hover::before {
-            left: 100%;
+            gap: 8px;
+            transition: all 0.3s ease;
+            text-decoration: none;
         }
 
         .btn-primary {
-            background: var(--primary-gradient);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
         }
 
         .btn-secondary {
-            background: var(--glass-bg);
-            border: 1px solid var(--card-border);
+            background: rgba(255, 255, 255, 0.1);
             color: var(--text-light);
+            border: 1px solid var(--border-color);
         }
 
-        .btn-secondary:hover {
-            background: var(--card-bg);
-            transform: translateY(-3px);
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
 
+        /* Data Table */
         .data-table {
             width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: inset 0 0 0 1px var(--card-border);
+            border-collapse: collapse;
+            margin-top: 20px;
         }
 
-        th {
+        .data-table th,
+        .data-table td {
+            padding: 15px;
             text-align: left;
-            padding: 20px 25px;
-            background: var(--primary-gradient);
-            color: white;
-            font-weight: 700;
-            font-size: 1rem;
-            position: sticky;
-            top: 0;
-            z-index: 10;
+            border-bottom: 1px solid var(--border-color);
         }
 
-        td {
-            padding: 18px 25px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        .data-table th {
+            background: rgba(255, 255, 255, 0.05);
             color: var(--text-light);
-            font-weight: 500;
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        tr:hover {
-            background: rgba(255, 255, 255, 0.03);
-        }
-
-        .quality-cell {
             font-weight: 700;
-            border-radius: 25px;
-            padding: 6px 16px;
-            display: inline-block;
             font-size: 0.9rem;
         }
 
-        .quality-excellent { 
-            background: linear-gradient(135deg, #4CAF50, #66BB6A); 
-            color: white;
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
-        }
-        .quality-good { 
-            background: linear-gradient(135deg, #8BC34A, #AED581); 
-            color: white;
-            box-shadow: 0 4px 15px rgba(139, 195, 74, 0.3);
-        }
-        .quality-fair { 
-            background: linear-gradient(135deg, #FF9800, #FFB74D); 
-            color: white;
-            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
-        }
-        .quality-poor { 
-            background: linear-gradient(135deg, #F44336, #EF5350); 
-            color: white;
-            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+        .data-table td {
+            color: var(--text-muted);
         }
 
+        .data-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .quality-cell {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .quality-excellent {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success-color);
+        }
+
+        .quality-good {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .quality-fair {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning-color);
+        }
+
+        .quality-poor {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--error-color);
+        }
+
+        /* Loading Overlay */
         .loading-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: var(--card-background);
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
-            z-index: 1000;
-            border-radius: 25px;
+            align-items: center;
+            border-radius: 20px;
+            z-index: 10;
         }
 
         .spinner {
-            width: 60px;
-            height: 60px;
-            border: 6px solid rgba(255, 255, 255, 0.1);
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--primary-color);
             border-radius: 50%;
-            border-top: 6px solid var(--primary-gradient);
             animation: spin 1s linear infinite;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         @keyframes spin {
@@ -564,167 +432,98 @@
         }
 
         .loading-text {
-            color: white;
-            font-size: 1.3rem;
+            color: var(--text-muted);
             font-weight: 600;
         }
 
+        /* Notification */
         .notification {
             position: fixed;
             top: 100px;
-            right: 30px;
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--card-border);
-            color: var(--text-light);
-            padding: 20px 30px;
-            border-radius: 15px;
-            box-shadow: var(--shadow);
-            transform: translateX(150%);
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 1100;
+            right: 20px;
+            background: var(--success-color);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
-            gap: 15px;
-            min-width: 300px;
+            gap: 10px;
+            transform: translateX(400px);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            font-weight: 600;
         }
 
         .notification.show {
             transform: translateX(0);
         }
 
-        .notification i {
-            font-size: 1.5rem;
-        }
-
-        .notification.success {
-            border-left: 4px solid #4CAF50;
-        }
-
-        .notification.success i {
-            color: #4CAF50;
-        }
-
         .notification.error {
-            border-left: 4px solid #F44336;
-        }
-
-        .notification.error i {
-            color: #F44336;
+            background: var(--error-color);
         }
 
         /* Responsive Design */
-        @media (max-width: 1200px) {
-            .charts-container {
-                grid-template-columns: 1fr;
-            }
-        }
-
         @media (max-width: 768px) {
-            .nav-links {
-                position: fixed;
-                top: 70px;
-                left: 0;
-                right: 0;
-                background: rgba(0, 0, 0, 0.95);
-                backdrop-filter: blur(20px);
-                flex-direction: column;
-                padding: 30px;
-                gap: 20px;
-                transform: translateY(-100%);
-                opacity: 0;
-                transition: var(--transition);
-            }
-
-            .nav-links.active {
-                transform: translateY(0);
-                opacity: 1;
-            }
-
             .nav-toggle {
                 display: flex;
             }
 
-            .nav-toggle.active span:nth-child(1) {
-                transform: rotate(45deg) translate(5px, 5px);
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--background-dark);
+                flex-direction: column;
+                padding: 20px;
+                border-top: 1px solid var(--border-color);
             }
 
-            .nav-toggle.active span:nth-child(2) {
-                opacity: 0;
-            }
-
-            .nav-toggle.active span:nth-child(3) {
-                transform: rotate(-45deg) translate(7px, -6px);
+            .nav-links.active {
+                display: flex;
             }
 
             .header h1 {
-                font-size: 2.5rem;
-            }
-            
-            .header .subtitle {
-                font-size: 1.1rem;
+                font-size: 2rem;
             }
 
             .dashboard-stats {
-                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 15px;
             }
-            
-            .stat-card {
-                padding: 25px 20px;
-            }
-            
-            .stat-value {
-                font-size: 2.2rem;
-            }
-            
+
             .charts-container {
                 grid-template-columns: 1fr;
+                gap: 20px;
             }
 
             .chart-container {
-                padding: 25px 20px;
+                height: 350px;
             }
-            
+
             .section-header {
                 flex-direction: column;
                 align-items: flex-start;
             }
-            
+
             .action-buttons {
                 width: 100%;
-                justify-content: center;
             }
 
             .btn {
-                padding: 12px 24px;
-                font-size: 0.9rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 90px 15px 15px;
+                flex: 1;
+                justify-content: center;
             }
 
-            .dashboard-stats {
-                grid-template-columns: 1fr 1fr;
-                gap: 15px;
-            }
-            
-            .chart-canvas-container {
-                height: 280px;
+            .data-table {
+                font-size: 0.8rem;
             }
 
-            .notification {
-                right: 15px;
-                left: 15px;
-                min-width: auto;
+            .data-table th,
+            .data-table td {
+                padding: 10px 5px;
             }
-        }
-
-        canvas {
-            width: 100% !important;
-            height: 100% !important;
         }
     </style>
 </head>
@@ -737,17 +536,14 @@
                 SleepWell
             </a>
             <ul class="nav-links">
-                <ul class="nav-links">
                 <li><a href="home.html">Beranda</a></li>
-                <li><a href="monitoring.html"class="active">Monitoring</a></li>
+                <li><a href="monitoring.html" class="active">Monitoring</a></li>
                 <li><a href="psqi.html">PSQI</a></li>
-                <li><a href="data.html">data</a></li>
+                <li><a href="data.html">Data</a></li>
                 <li><a href="coba.html">Laporan</a></li>
                 <li><a href="tips.html">Tips</a></li>
                 <li><a href="tentang.html">Tentang</a></li>
                 <li><a href="logout.html">Keluar</a></li>
-            </ul>
-
             </ul>
             <div class="nav-toggle">
                 <span></span>
@@ -797,7 +593,7 @@
         <div class="charts-container">
             <div class="chart-container">
                 <div class="chart-header">
-                    <div class="chart-title">Tren Kualitas Tidur (24 Jam Terakhir)</div>
+                    <div class="chart-title">Kualitas Lingkungan Tidur (24 Jam Terakhir)</div>
                     <div class="chart-actions">
                         <div class="chart-btn" title="Unduh sebagai PNG" onclick="downloadChart('qualityChart')">
                             <i class="fas fa-download"></i>
@@ -831,7 +627,7 @@
 
         <div class="data-section" id="tentang">
             <div class="section-header">
-                <div class="section-title">Data Rekaman Tidur</div>
+                <div class="section-title">Data Rekaman Sensor</div>
                 <div class="action-buttons">
                     <button class="btn btn-secondary" onclick="loadData()">
                         <i class="fas fa-sync-alt"></i> Refresh Data
@@ -845,19 +641,18 @@
             <div style="position: relative; min-height: 350px;">
                 <div class="loading-overlay" id="loadingOverlay">
                     <div class="spinner"></div>
-                    <div class="loading-text">Memuat data tidur...</div>
+                    <div class="loading-text">Memuat data sensor...</div>
                 </div>
                 
                 <table class="data-table" id="dataTable">
                     <thead>
                         <tr>
                             <th>Waktu Pencatatan</th>
-                            <th>Kualitas</th>
-                            <th>Kategori</th>
                             <th>Cahaya (lux)</th>
                             <th>Suara (dB)</th>
                             <th>Suhu (°C)</th>
                             <th>Gerakan</th>
+                            
                         </tr>
                     </thead>
                     <tbody id="tableBody">
@@ -969,11 +764,47 @@
             }, 4000);
         }
 
+        // Fungsi untuk menghitung kualitas tidur berdasarkan kondisi lingkungan
+        function calculateSleepQuality(light, sound, temp, movement) {
+            let score = 100;
+            
+            // Faktor cahaya (ideal: 0-10 lux)
+            if (light > 50) score -= 30;
+            else if (light > 20) score -= 15;
+            else if (light > 10) score -= 5;
+            
+            // Faktor suara (ideal: <30 dB)
+            if (sound > 60) score -= 25;
+            else if (sound > 45) score -= 15;
+            else if (sound > 30) score -= 5;
+            
+            // Faktor suhu (ideal: 18-22°C)
+            if (temp < 16 || temp > 26) score -= 20;
+            else if (temp < 18 || temp > 24) score -= 10;
+            else if (temp < 19 || temp > 23) score -= 5;
+            
+            // Faktor gerakan (ideal: 0-2 kejadian)
+            if (movement > 10) score -= 30;
+            else if (movement > 5) score -= 15;
+            else if (movement > 2) score -= 5;
+            
+            return Math.max(0, Math.min(100, score));
+        }
+
+        // Fungsi untuk mendapatkan kategori kualitas
+        function getQualityCategory(score) {
+            if (score >= 85) return 'Excellent';
+            else if (score >= 70) return 'Good';
+            else if (score >= 50) return 'Fair';
+            else return 'Poor';
+        }
+
         // Fungsi untuk mengambil data dari Supabase
         async function fetchSleepData() {
             showLoading(true);
             try {
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/sleep_monitoring?order=recorded_at.desc&limit=10`, {
+                // Ganti nama tabel sesuai dengan tabel baru Anda
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/tidur?order=created_at.desc&limit=50`, {
                     headers: {
                         'apikey': SUPABASE_ANON_KEY,
                         'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
@@ -986,9 +817,28 @@
                 }
 
                 const data = await response.json();
-                return data;
+                
+                // Tambahkan perhitungan kualitas tidur ke setiap data
+                const processedData = data.map(item => ({
+                    ...item,
+                    sleep_quality_score: calculateSleepQuality(
+                        item.light_level,
+                        item.sound_level,
+                        item.temperature,
+                        item.movement_count
+                    ),
+                    sleep_quality_category: getQualityCategory(calculateSleepQuality(
+                        item.light_level,
+                        item.sound_level,
+                        item.temperature,
+                        item.movement_count
+                    ))
+                }));
+                
+                return processedData;
             } catch (error) {
                 console.error('Error fetching data:', error);
+                showNotification('Gagal mengambil data dari database, menggunakan data demo', false);
                 // Generate sample data if API fails
                 return generateSampleData();
             } finally {
@@ -1003,23 +853,28 @@
             
             for (let i = 0; i < 50; i++) {
                 const time = new Date(now.getTime() - (i * 30 * 60 * 1000)); // Every 30 minutes
-                const baseQuality = 75 + Math.sin(i * 0.3) * 20;
-                const quality = Math.max(20, Math.min(100, baseQuality + (Math.random() - 0.5) * 10));
                 
-                let category;
-                if (quality >= 85) category = 'Excellent';
-                else if (quality >= 70) category = 'Good';
-                else if (quality >= 50) category = 'Fair';
-                else category = 'Poor';
+                // Generate realistic sensor data
+                const light_level = Math.max(0, Math.round(5 + Math.random() * 15 + (i > 20 ? Math.random() * 30 : 0)));
+                const sound_level = Math.round(20 + Math.random() * 25 + (Math.random() > 0.8 ? Math.random() * 20 : 0));
+                const temperature = Math.round((20 + Math.random() * 6) * 10) / 10;
+                const movement_count = Math.round(Math.random() * 8);
+                
+                // Calculate sleep quality based on sensor data
+                const sleep_quality_score = calculateSleepQuality(light_level, sound_level, temperature, movement_count);
+                const sleep_quality_category = getQualityCategory(sleep_quality_score);
                 
                 data.push({
-                    recorded_at: time.toISOString(),
-                    sleep_quality_score: Math.round(quality),
-                    sleep_quality_category: category,
-                    light_level: Math.round(5 + Math.random() * 15),
-                    sound_level: Math.round(25 + Math.random() * 20),
-                    temperature: Math.round((22 + Math.random() * 4) * 10) / 10,
-                    movement_count: Math.round(Math.random() * 5)
+                    id: i + 1,
+                    user_id: 'demo-user-123',
+                    light_level: light_level,
+                    sound_level: sound_level,
+                    temperature: temperature,
+                    movement_count: movement_count,
+                    created_at: time.toISOString(),
+                    updated_at: time.toISOString(),
+                    sleep_quality_score: sleep_quality_score,
+                    sleep_quality_category: sleep_quality_category
                 });
             }
             
@@ -1060,17 +915,17 @@
 
             data.forEach((row, index) => {
                 const tr = document.createElement('tr');
-                const time = new Date(row.recorded_at).toLocaleString('id-ID');
+                const time = new Date(row.created_at).toLocaleString('id-ID');
                 const qualityClass = `quality-${row.sleep_quality_category.toLowerCase()}`;
 
                 tr.innerHTML = `
                     <td>${time}</td>
-                    <td>${row.sleep_quality_score}%</td>
-                    <td><span class="quality-cell ${qualityClass}">${row.sleep_quality_category}</span></td>
                     <td>${row.light_level}</td>
                     <td>${row.sound_level}</td>
                     <td>${row.temperature}</td>
                     <td>${row.movement_count}</td>
+                    <td>
+                    
                 `;
                 
                 // Add fade-in animation
@@ -1086,7 +941,7 @@
             });
         }
 
-        // Buat chart kualitas tidur
+        // Buat chart kualitas lingkungan tidur
         function createQualityChart(data) {
             const ctx = document.getElementById('qualityChart').getContext('2d');
             
@@ -1096,7 +951,7 @@
 
             const last24Hours = data.slice(0, 24).reverse();
             const labels = last24Hours.map(item => 
-                new Date(item.recorded_at).toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'})
+                new Date(item.created_at).toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'})
             );
             const qualityData = last24Hours.map(item => item.sleep_quality_score);
 
@@ -1105,7 +960,7 @@
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Kualitas Tidur (%)',
+                        label: 'Kualitas Lingkungan Tidur (%)',
                         data: qualityData,
                         borderColor: 'rgba(102, 126, 234, 1)',
                         backgroundColor: 'rgba(102, 126, 234, 0.1)',
@@ -1116,11 +971,7 @@
                         pointRadius: 6,
                         pointHoverRadius: 8,
                         tension: 0.4,
-                        fill: true,
-                        shadowColor: 'rgba(102, 126, 234, 0.3)',
-                        shadowBlur: 15,
-                        shadowOffsetX: 0,
-                        shadowOffsetY: 10
+                        fill: true
                     }]
                 },
                 options: {
@@ -1147,7 +998,19 @@
                             borderColor: 'rgba(102, 126, 234, 0.5)',
                             borderWidth: 1,
                             cornerRadius: 10,
-                            padding: 12
+                            padding: 12,
+                            callbacks: {
+                                afterBody: function(tooltipItems) {
+                                    const dataIndex = tooltipItems[0].dataIndex;
+                                    const dataPoint = last24Hours[dataIndex];
+                                    return [
+                                        `Cahaya: ${dataPoint.light_level} lux`,
+                                        `Suara: ${dataPoint.sound_level} dB`,
+                                        `Suhu: ${dataPoint.temperature}°C`,
+                                        `Gerakan: ${dataPoint.movement_count} kali`
+                                    ];
+                                }
+                            }
                         }
                     },
                     scales: {
@@ -1163,6 +1026,9 @@
                                 font: {
                                     size: 12,
                                     weight: '500'
+                                },
+                                callback: function(value) {
+                                    return value + '%';
                                 }
                             }
                         },
@@ -1179,13 +1045,6 @@
                                 }
                             }
                         }
-                    },
-                    elements: {
-                        point: {
-                            hoverBackgroundColor: '#667eea',
-                            hoverBorderColor: '#fff',
-                            hoverBorderWidth: 3
-                        }
                     }
                 }
             });
@@ -1201,7 +1060,7 @@
 
             const last12Hours = data.slice(0, 12).reverse();
             const labels = last12Hours.map(item => 
-                new Date(item.recorded_at).toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'})
+                new Date(item.created_at).toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'})
             );
 
             environmentChart = new Chart(ctx, {
@@ -1218,7 +1077,8 @@
                             tension: 0.4,
                             fill: true,
                             pointRadius: 5,
-                            pointHoverRadius: 7
+                            pointHoverRadius: 7,
+                            yAxisID: 'y'
                         },
                         {
                             label: 'Cahaya (lux)',
@@ -1229,7 +1089,8 @@
                             tension: 0.4,
                             fill: true,
                             pointRadius: 5,
-                            pointHoverRadius: 7
+                            pointHoverRadius: 7,
+                            yAxisID: 'y1'
                         },
                         {
                             label: 'Suara (dB)',
@@ -1240,7 +1101,20 @@
                             tension: 0.4,
                             fill: true,
                             pointRadius: 5,
-                            pointHoverRadius: 7
+                            pointHoverRadius: 7,
+                            yAxisID: 'y2'
+                        },
+                        {
+                            label: 'Gerakan',
+                            data: last12Hours.map(item => item.movement_count),
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            backgroundColor: 'rgba(153, 102, 255, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            fill: true,
+                            pointRadius: 5,
+                            pointHoverRadius: 7,
+                            yAxisID: 'y3'
                         }
                     ]
                 },
@@ -1272,20 +1146,6 @@
                         }
                     },
                     scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.1)',
-                                lineWidth: 1
-                            },
-                            ticks: {
-                                color: 'rgba(255, 255, 255, 0.8)',
-                                font: {
-                                    size: 12,
-                                    weight: '500'
-                                }
-                            }
-                        },
                         x: {
                             grid: {
                                 color: 'rgba(255, 255, 255, 0.05)',
@@ -1298,6 +1158,42 @@
                                     weight: '500'
                                 }
                             }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)',
+                                lineWidth: 1
+                            },
+                            ticks: {
+                                color: 'rgba(255, 99, 132, 0.8)',
+                                font: {
+                                    size: 12,
+                                    weight: '500'
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Suhu (°C)',
+                                color: 'rgba(255, 99, 132, 0.8)'
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: false,
+                            position: 'right'
+                        },
+                        y2: {
+                            type: 'linear',
+                            display: false,
+                            position: 'right'
+                        },
+                        y3: {
+                            type: 'linear',
+                            display: false,
+                            position: 'right'
                         }
                     }
                 }
@@ -1331,13 +1227,13 @@
             const table = document.getElementById('dataTable');
             const ws = XLSX.utils.table_to_sheet(table);
             const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Data Tidur");
+            XLSX.utils.book_append_sheet(wb, ws, "Data Sensor");
             
             // Format tanggal untuk nama file
             const date = new Date();
             const dateStr = `${date.getFullYear()}-${(date.getMonth()+1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
             
-            XLSX.writeFile(wb, `data_tidur_${dateStr}.xlsx`);
+            XLSX.writeFile(wb, `data_sensor_tidur_${dateStr}.xlsx`);
             showNotification('Data berhasil diekspor ke Excel');
         }
 
@@ -1351,6 +1247,8 @@
                 createQualityChart(data);
                 createEnvironmentChart(data);
                 showNotification('Data berhasil diperbarui');
+            } else {
+                showNotification('Tidak ada data yang tersedia', false);
             }
         }
 
@@ -1381,7 +1279,49 @@
                 card.querySelector('.stat-icon').style.transform = 'rotate(0deg) scale(1)';
             });
         });
+
+        // Real-time quality assessment
+        function assessCurrentConditions(data) {
+            if (!data || data.length === 0) return;
+            
+            const latest = data[0];
+            const quality = latest.sleep_quality_score;
+            const statusIndicator = document.querySelector('.status-indicator');
+            
+            // Update status based on current quality
+            if (quality >= 85) {
+                statusIndicator.style.color = '#10b981';
+                statusIndicator.querySelector('.pulse').style.background = '#10b981';
+            } else if (quality >= 70) {
+                statusIndicator.style.color = '#22c55e';
+                statusIndicator.querySelector('.pulse').style.background = '#22c55e';
+            } else if (quality >= 50) {
+                statusIndicator.style.color = '#f59e0b';
+                statusIndicator.querySelector('.pulse').style.background = '#f59e0b';
+            } else {
+                statusIndicator.style.color = '#ef4444';
+                statusIndicator.querySelector('.pulse').style.background = '#ef4444';
+            }
+        }
+
+        // Enhanced load data with quality assessment
+        async function loadDataWithAssessment() {
+            const data = await fetchSleepData();
+            
+            if (data.length > 0) {
+                updateStatusCards(data[0]);
+                updateDataTable(data);
+                createQualityChart(data);
+                createEnvironmentChart(data);
+                assessCurrentConditions(data);
+                showNotification('Data dan analisis berhasil diperbarui');
+            } else {
+                showNotification('Tidak ada data yang tersedia', false);
+            }
+        }
+
+        // Update the main load function
+        loadData = loadDataWithAssessment;
     </script>
 </body>
 </html>
-
